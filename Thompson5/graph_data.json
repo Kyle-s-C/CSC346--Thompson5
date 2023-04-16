@@ -1,0 +1,7 @@
+[
+  {"Id": 0, "WasVisited": false, "AdjacentNodes": [false, true, false, false, true]},
+  {"Id": 1, "WasVisited": false, "AdjacentNodes": [true, false, true, false, false]},
+  {"Id": 2, "WasVisited": false, "AdjacentNodes": [false, true, false, true, true]},
+  {"Id": 3, "WasVisited": false, "AdjacentNodes": [false, false, true, false, false]},
+  {"Id": 4, "WasVisited": false, "AdjacentNodes": [true, false, true, false, false]}
+]

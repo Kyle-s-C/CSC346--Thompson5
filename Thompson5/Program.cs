@@ -1,7 +1,4 @@
-﻿using System;
-using GraphNS;
-
-namespace GraphNS
+﻿namespace GraphNS
 {
     class Program
     {

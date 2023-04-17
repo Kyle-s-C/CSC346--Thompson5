@@ -4,6 +4,6 @@ namespace GraphNS
 {
     public interface IProcessData
     {
-        void ReadData(string path);
+        public abstract void ReadData(string path);
     }
 }

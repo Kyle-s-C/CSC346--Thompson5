@@ -4,10 +4,10 @@ namespace GraphNS
 {
     public interface ISearchAlgorithms
     {
-        Queue<Node> Queue { get; }
-        Stack<Node> Stack { get; }
+        Queue<Node> Queue { get => Queue; set => Queue = value;}
+        Stack<Node> Stack { get => Stack; set => Stack = value; }
 
-        void BreadthFS(int start);
-        void DepthFS(int start);
+        public abstract void BreadthFS(int start);
+        public abstract void DepthFS(int start);
     }
 }

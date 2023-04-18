@@ -74,54 +74,63 @@ namespace GraphNS
         /********************************************************************
         *** METHOD: private Node? FindAdjacentUnvisitedNode(Node node)    ***
         *********************************************************************
-        *** DESCRIPTION : <detailed English description of the method> ***
-        *** INPUT ARGS : <list of all input parameter names> ***
-        *** OUTPUT ARGS : <list of all output parameter names> ***
-        *** IN/OUT ARGS : <list of all input/output parameter names> ***
-        *** RETURN : <return type and return value name> ***
+        *** DESCRIPTION : This private method is used by the DepthFS and  ***
+        ***               BreadthFS methods to find the first adjacent    ***
+        ***               unvisited node to the current node being visited***
+        ***               It iterates through the current node's          ***
+        ***               AdjacentNodes list and returns the first node   ***
+        ***               that is both adjacent and unvisited. If there   ***
+        ***               are no adjacent unvisited nodes, it returns null***
+        *** INPUT ARGS : Node node - the node to find adjacent            ***  
+        ***                          unvisited nodes for                  ***
+        *** OUTPUT ARGS :                                                 ***
+        *** IN/OUT ARGS :                                                 ***
+        *** RETURN :                                                      ***
         ********************************************************************/
         private Node? FindAdjacentUnvisitedNode(Node node)
-{
-    if (node.AdjacentNodes == null || _nodes == null)
-    {
-        return null;
-    }
-
-    for (int i = 0; i < node.AdjacentNodes.Count; i++)
-    {
-        if (i >= _nodes.Count)
         {
-            Console.WriteLine($"Error: index {i} is out of range for _nodes list (node ID: {node.Id})");
-            break;
-        }
-
-        if (_nodes[i].Id == node.Id)
-        {
-            continue;
-        }
-
-        if (node.AdjacentNodes[i])
-        {
-            if (!_nodes[i].WasVisited)
+            if (node.AdjacentNodes == null || _nodes == null)
             {
-                return _nodes[i];
+                return null;
             }
-        }
-    }
 
-    return null;
-}
+            for (int i = 0; i < node.AdjacentNodes.Count; i++)
+            {
+                if (i >= _nodes.Count)
+                {
+                    Console.WriteLine($"Error: index {i} is out of range for _nodes list (node ID: {node.Id})");
+                    break;
+                }
+
+                if (_nodes[i].Id == node.Id)
+                {
+                    continue;
+                }
+
+                if (node.AdjacentNodes[i])
+                {
+                    if (!_nodes[i].WasVisited)
+                    {
+                        return _nodes[i];
+                    }
+                }
+            }
+            return null;
+        }
 
 
 
         /********************************************************************
-        *** METHOD <name of method> ***
+        *** METHOD: private static void ViewNode(Node node)               ***
         *********************************************************************
-        *** DESCRIPTION : <detailed English description of the method> ***
-        *** INPUT ARGS : <list of all input parameter names> ***
-        *** OUTPUT ARGS : <list of all output parameter names> ***
-        *** IN/OUT ARGS : <list of all input/output parameter names> ***
-        *** RETURN : <return type and return value name> ***
+        *** DESCRIPTION : This private static method is used to print the ***
+        ***               id of the specified node to the console. It is  ***
+        ***               used by the DepthFS and BreadthFS methods to    ***
+        ***               display the order in which nodes are visited.   ***
+        *** INPUT ARGS : Node node - the node to print the id for         ***
+        *** OUTPUT ARGS :                                                 ***
+        *** IN/OUT ARGS :                                                 ***
+        *** RETURN :  void                                                ***
         ********************************************************************/
         private static void ViewNode(Node node)
         {
@@ -135,54 +144,62 @@ namespace GraphNS
 
 
         /********************************************************************
-        *** METHOD <name of method> ***
+        *** METHOD: public void ReadData(string path)                     ***
         *********************************************************************
-        *** DESCRIPTION : <detailed English description of the method> ***
-        *** INPUT ARGS : <list of all input parameter names> ***
-        *** OUTPUT ARGS : <list of all output parameter names> ***
-        *** IN/OUT ARGS : <list of all input/output parameter names> ***
-        *** RETURN : <return type and return value name> ***
+        *** DESCRIPTION : Reads JSON data from the given file path,       ***
+        ***               deserializes it to a list of Node objects, and  ***
+        ***               assigns it to the _nodes member variable. If the*** 
+        ***               file doesn't exist, or is empty, error messages ***
+        ***               are printed and no data is loaded. Ifthe JSON   ***
+        ***               data can't be parsed, an error message is printed**
+        ***               and no data is loaded.                          ***
+        *** INPUT ARGS : string path - the path to the JSON file to read  ***
+        *** OUTPUT ARGS : N/A                                             ***
+        *** IN/OUT ARGS : N/A                                             ***
+        *** RETURN : void                                                 ***
         ********************************************************************/
         public void ReadData(string path)
-{
-    if (!File.Exists(path))
-    {
-        Console.WriteLine($"The file '{path}' does not exist.");
-        return;
-    }
+        {
+            if (!File.Exists(path))
+            {
+                Console.WriteLine($"The file '{path}' does not exist.");
+                return;
+            }
 
-    FileInfo fileInfo = new FileInfo(path);
-    if (fileInfo.Length == 0)
-    {
-        Console.WriteLine($"The file '{path}' is empty.");
-        return;
-    }
+            FileInfo fileInfo = new FileInfo(path);
+            if (fileInfo.Length == 0)
+            {
+                Console.WriteLine($"The file '{path}' is empty.");
+                return;
+            }
 
-    try
-    {
-        string jsonString = File.ReadAllText(path);
-        var nodes = JsonSerializer.Deserialize<List<Node>>(jsonString);
-        _nodes = nodes ?? new List<Node>();
+            try
+            {
+                string jsonString = File.ReadAllText(path);
+                var nodes = JsonSerializer.Deserialize<List<Node>>(jsonString);
+                _nodes = nodes ?? new List<Node>();
 
-        jsonString = JsonSerializer.Serialize<List<Node>>(_nodes);
-        File.WriteAllText(path, jsonString);
-    }
-    catch (JsonException e)
-    {
-        Console.WriteLine($"Error parsing JSON data: {e.Message}");
-    }
-}
+                jsonString = JsonSerializer.Serialize<List<Node>>(_nodes);
+                File.WriteAllText(path, jsonString);
+            }
+            catch (JsonException e)
+            {
+                Console.WriteLine($"Error parsing JSON data: {e.Message}");
+            }
+        }
 
 
 
         /********************************************************************
-        *** METHOD <name of method> ***
+        *** METHOD: public void BreadthFS(int start)                      ***
         *********************************************************************
-        *** DESCRIPTION : <detailed English description of the method> ***
-        *** INPUT ARGS : <list of all input parameter names> ***
-        *** OUTPUT ARGS : <list of all output parameter names> ***
-        *** IN/OUT ARGS : <list of all input/output parameter names> ***
-        *** RETURN : <return type and return value name> ***
+        *** DESCRIPTION : Performs a breadth-first search starting at the ***
+        ***               node at the given index in _nodes. Visited nodes***
+        ***               are marked as such and printed to the console.  ***
+        *** INPUT ARGS : int start - the index of the starting node       ***
+        *** OUTPUT ARGS :                                                 ***
+        *** IN/OUT ARGS :                                                 ***
+        *** RETURN : void                                                 ***
         ********************************************************************/
         public void BreadthFS(int start)
         {
@@ -215,13 +232,15 @@ namespace GraphNS
 
 
         /********************************************************************
-        *** METHOD <name of method> ***
+        *** METHOD: public void DepthFS(int start)                        ***
         *********************************************************************
-        *** DESCRIPTION : <detailed English description of the method> ***
-        *** INPUT ARGS : <list of all input parameter names> ***
-        *** OUTPUT ARGS : <list of all output parameter names> ***
-        *** IN/OUT ARGS : <list of all input/output parameter names> ***
-        *** RETURN : <return type and return value name> ***
+        *** DESCRIPTION : Performs a depth-first search starting at the   ***
+        ***               node at the given index in _nodes. Visited nodes***
+        ***               are marked as such and printed to the console.  ***
+        *** INPUT ARGS : int start - the index of the starting node       ***
+        *** OUTPUT ARGS :                                                 ***
+        *** IN/OUT ARGS :                                                 ***
+        *** RETURN : void                                                 ***
         ********************************************************************/
         public void DepthFS(int start)
         {
@@ -244,17 +263,17 @@ namespace GraphNS
 
                 if (nextNode == null)
                 {
-            Stack.Pop();
+                    Stack.Pop();
+                }
+                else
+                {
+                    nextNode.WasVisited = true;
+                    ViewNode(nextNode);
+                    Stack.Push(nextNode);
+                }
+            }
+            Console.WriteLine();
         }
-        else
-        {
-            nextNode.WasVisited = true;
-            ViewNode(nextNode);
-            Stack.Push(nextNode);
-        }
-    }
-    Console.WriteLine();
-}
 
     }
 }

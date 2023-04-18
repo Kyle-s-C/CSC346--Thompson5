@@ -1,4 +1,16 @@
-﻿
+﻿/********************************************************************
+*** NAME : Kyle Thompson                                          ***
+*** CLASS : CSc 346                                               ***
+*** ASSIGNMENT : Assignment #5                                    ***
+*** DUE DATE : 4-19-23                                            ***
+*** INSTRUCTOR : GAMRADT                                          ***
+*********************************************************************
+*** DESCRIPTION : Using VS Code create a user-defnined Abstract   ***
+***               Data Type using C# classes named Graph, Node    ***
+***               and two interface named IProcessData &          ***
+***               ISearchAlgorithm                                ***
+***               Program.cs runs everything                      ***
+********************************************************************/
 
 namespace GraphNS
 {

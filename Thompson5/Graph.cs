@@ -22,8 +22,8 @@ namespace GraphNS
     public class Graph : IProcessData, ISearchAlgorithms
     {
         private List<Node> _nodes;
-        public Queue<Node>? BreathFSQueue;
-        public Stack<Node>? DepthFSStack;
+        public Queue<Node>? Queue;
+        public Stack<Node>? Stack;
 
 
 
@@ -209,15 +209,15 @@ namespace GraphNS
                  Console.WriteLine($"Error: invalid start index {start} (nodes count: {_nodes.Count})");
                 return;
             }
-            BreathFSQueue = new Queue<Node>();
+            Queue = new Queue<Node>();
             Node v = new Node();
             _nodes[start].WasVisited = true;
-            BreathFSQueue.Enqueue(_nodes[start]);
+            Queue.Enqueue(_nodes[start]);
 
-            while (BreathFSQueue.Count > 0)
+            while (Queue.Count > 0)
             {
                 //Console.WriteLine("Dequeueing " + v.Number);
-                v = BreathFSQueue.Dequeue();
+                v = Queue.Dequeue();
                 ViewNode(v);
 
                 while (FindAdjacentUnvisitedNode(v) != null)
@@ -227,7 +227,7 @@ namespace GraphNS
 
                     if (w != null)
                     {
-                        BreathFSQueue.Enqueue(w);
+                        Queue.Enqueue(w);
                         w.WasVisited = true;
                     }
                 }
@@ -257,7 +257,7 @@ namespace GraphNS
                 return;
             }
 
-            DepthFSStack = new Stack<Node>();
+            Stack = new Stack<Node>();
             Node n = new Node();
 
             
@@ -265,15 +265,15 @@ namespace GraphNS
             if (_nodes.Count == 0)
                 return;
 
-            DepthFSStack.Push(_nodes[start]);
+            Stack.Push(_nodes[start]);
 
-            while (DepthFSStack.Count > 0)
+            while (Stack.Count > 0)
             {
-                n = DepthFSStack.Peek();
+                n = Stack.Peek();
 
                 if (n.WasVisited && FindAdjacentUnvisitedNode(n) == null)
                 {
-                    n = DepthFSStack.Pop();
+                    n = Stack.Pop();
                     
                 }
 
@@ -285,7 +285,7 @@ namespace GraphNS
                         
                         if (n1 != null)
                         {
-                            DepthFSStack.Push(n1);
+                            Stack.Push(n1);
                         }   
                 }
 
@@ -298,7 +298,7 @@ namespace GraphNS
         
                     if (n1 != null)
                     {
-                        DepthFSStack.Push(n1);
+                        Stack.Push(n1);
                     }
                 }
 
@@ -306,7 +306,7 @@ namespace GraphNS
                 {
                     n.WasVisited = true;
                     ViewNode(n);
-                    DepthFSStack.Pop();
+                    Stack.Pop();
                 }
             }
             ResetVisitedSet();

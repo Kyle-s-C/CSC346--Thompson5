@@ -260,8 +260,6 @@ namespace GraphNS
             Stack = new Stack<Node>();
             Node n = new Node();
 
-            
-
             if (_nodes.Count == 0)
                 return;
 

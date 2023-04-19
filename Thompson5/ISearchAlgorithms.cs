@@ -20,8 +20,8 @@ namespace GraphNS
     public interface ISearchAlgorithms
     {
         //PROPERTIES
-        Queue<Node> Queue { get; set;}
-        Stack<Node> Stack { get; set; }
+        public Queue<Node> Queue { get {return Queue;} set{Queue = value;}}
+        public Stack<Node> Stack { get{return Stack;} set{Stack = value;} }
 
         /********************************************************************
         *** METHOD: public abstract void BreadthFS(int start);            ***

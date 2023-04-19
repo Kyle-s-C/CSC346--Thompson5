@@ -22,8 +22,8 @@ namespace GraphNS
     public class Graph : IProcessData, ISearchAlgorithms
     {
         private List<Node> _nodes;
-        public Queue<Node> Queue { get; set;} = new Queue<Node>();
-        public Stack<Node> Stack { get; set;} = new Stack<Node>();
+        public Queue<Node>? BreathFSQueue;
+        public Stack<Node>? DepthFSStack;
 
 
 
@@ -209,24 +209,31 @@ namespace GraphNS
                  Console.WriteLine($"Error: invalid start index {start} (nodes count: {_nodes.Count})");
                 return;
             }
-            ResetVisitedSet();
-            var startNode = _nodes[start];
-            Queue.Enqueue(startNode);
-            startNode.WasVisited = true;
-            ViewNode(startNode);
+            BreathFSQueue = new Queue<Node>();
+            Node v = new Node();
+            _nodes[start].WasVisited = true;
+            BreathFSQueue.Enqueue(_nodes[start]);
 
-            while (Queue.Count > 0)
+            while (BreathFSQueue.Count > 0)
             {
-                var currentNode = Queue.Dequeue();
-                Node? nextNode;
-                while ((nextNode = FindAdjacentUnvisitedNode(currentNode)) != null)
+                //Console.WriteLine("Dequeueing " + v.Number);
+                v = BreathFSQueue.Dequeue();
+                ViewNode(v);
+
+                while (FindAdjacentUnvisitedNode(v) != null)
                 {
-                    nextNode.WasVisited = true;
-                    ViewNode(nextNode);
-                    Queue.Enqueue(nextNode);
+                    Node? w = FindAdjacentUnvisitedNode(v);
+                    
+
+                    if (w != null)
+                    {
+                        BreathFSQueue.Enqueue(w);
+                        w.WasVisited = true;
+                    }
                 }
+
             }
-            Console.WriteLine();
+            ResetVisitedSet();
         }
 
 
@@ -246,33 +253,63 @@ namespace GraphNS
         {
             if (start < 0 || start >= _nodes.Count)
             {
-                Console.WriteLine($"Error: invalid start index {start} (nodes count: {_nodes.Count})");
+                Console.WriteLine($"Error: invalid start node {start} (nodes count: {_nodes.Count})");
                 return;
             }
 
-            ResetVisitedSet();
-            var startNode = _nodes[start];
-            Stack.Push(startNode);
-            startNode.WasVisited = true;
-            ViewNode(startNode);
+            DepthFSStack = new Stack<Node>();
+            Node n = new Node();
 
-            while (Stack.Count > 0)
+            
+
+            if (_nodes.Count == 0)
+                return;
+
+            DepthFSStack.Push(_nodes[start]);
+
+            while (DepthFSStack.Count > 0)
             {
-                var currentNode = Stack.Peek();
-                var nextNode = FindAdjacentUnvisitedNode(currentNode);
+                n = DepthFSStack.Peek();
 
-                if (nextNode == null)
+                if (n.WasVisited && FindAdjacentUnvisitedNode(n) == null)
                 {
-                    Stack.Pop();
+                    n = DepthFSStack.Pop();
+                    
                 }
-                else
+
+                if (n.WasVisited && FindAdjacentUnvisitedNode(n) != null)
                 {
-                    nextNode.WasVisited = true;
-                    ViewNode(nextNode);
-                    Stack.Push(nextNode);
+
+                        Node? n1 = FindAdjacentUnvisitedNode(n);
+                        
+                        
+                        if (n1 != null)
+                        {
+                            DepthFSStack.Push(n1);
+                        }   
+                }
+
+                if (!n.WasVisited && FindAdjacentUnvisitedNode(n) != null)
+                {
+                    n.WasVisited = true;
+                    ViewNode(n);
+
+                    Node? n1 = FindAdjacentUnvisitedNode(n);
+        
+                    if (n1 != null)
+                    {
+                        DepthFSStack.Push(n1);
+                    }
+                }
+
+                if (!n.WasVisited && FindAdjacentUnvisitedNode(n) == null)
+                {
+                    n.WasVisited = true;
+                    ViewNode(n);
+                    DepthFSStack.Pop();
                 }
             }
-            Console.WriteLine();
+            ResetVisitedSet();
         }
 
     }

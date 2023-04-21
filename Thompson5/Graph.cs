@@ -22,8 +22,8 @@ namespace GraphNS
     public class Graph : IProcessData, ISearchAlgorithms
     {
         private List<Node> _nodes;
-        public Queue<Node>? Queue;
-        public Stack<Node>? Stack;
+        public Queue<Node> Queue {get; set;}
+        public Stack<Node> Stack {get; set;}
 
 
 
@@ -46,6 +46,9 @@ namespace GraphNS
         {
             _nodes = new List<Node>();
             ReadData(filePath);
+
+            Queue = new Queue<Node>();
+            Stack = new Stack<Node>();
         }
 
         
@@ -209,7 +212,6 @@ namespace GraphNS
                  Console.WriteLine($"Error: invalid start index {start} (nodes count: {_nodes.Count})");
                 return;
             }
-            Queue = new Queue<Node>();
             Node v = new Node();
             _nodes[start].WasVisited = true;
             Queue.Enqueue(_nodes[start]);
@@ -257,7 +259,6 @@ namespace GraphNS
                 return;
             }
 
-            Stack = new Stack<Node>();
             Node n = new Node();
 
             if (_nodes.Count == 0)
